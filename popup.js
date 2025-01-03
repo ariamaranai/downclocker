@@ -1,4 +1,3 @@
-
 (async chrome => {
   chrome.action.setBadgeTextColor({ color: "#fff" });
   let tab = (await chrome.tabs.query({ active: !0, currentWindow: !0 }))[0];
