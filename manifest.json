@@ -8,9 +8,10 @@
   },
   "permissions": [
     "debugger",
-    "tabs"
+    "tabs",
+    "tabGroups",
+    "webNavigation"
   ],
-  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "bg.js"
   },
