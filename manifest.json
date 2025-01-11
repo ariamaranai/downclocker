@@ -9,7 +9,6 @@
   "permissions": [
     "debugger",
     "tabs",
-    "tabGroups",
     "webNavigation"
   ],
   "background": {
