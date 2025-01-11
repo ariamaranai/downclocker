@@ -8,8 +8,7 @@
   },
   "permissions": [
     "debugger",
-    "tabs",
-    "webNavigation"
+    "tabs"
   ],
   "background": {
     "service_worker": "bg.js"
