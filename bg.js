@@ -14,8 +14,8 @@
     let rate = m[1];
     let tabId = tab.id;
     let target = { tabId };
-    tabId == dbgTabId
-      ? rate != "1"
+    if (tabId == dbgTabId)
+      rate != "1"
         ? (
           chrome.debugger.sendCommand(target, "Emulation.setCPUThrottlingRate", {
             rate: +rate
@@ -23,20 +23,29 @@
           chrome.action.setBadgeText({ text: badgeText = "x" + rate })
         )
         : chrome.debugger.onDetach.dispatch()
-      : rate != "1" && (
-          tab.url[0] == "c" && await chrome.tabs.update({ url: "about:blank" }),
-          chrome.debugger.attach(target, "1.3"),
-          chrome.debugger.sendCommand(target, "Target.setAutoAttach", {
-            autoAttach: !0,
-            waitForDebuggerOnStart: !1
-          }),
-          chrome.debugger.sendCommand(target, "Emulation.setCPUThrottlingRate", {
-            rate: +rate
-          }),
-          dbgTabId = tabId,
-          chrome.tabs.onActivated.addListener(tabActivatedHandler),
-          chrome.action.setBadgeText({ text: badgeText = "x" + rate })
-        )
+    else if (rate != "1") {
+      let url = tab.url;
+      if (url[0] == "c") {
+        await chrome.tabs.update({ url: "about:blank" });
+        let { promise, resolve }  = Promise.withResolvers();
+        let init = id => id == tabId && resolve();
+        chrome.tabs.onUpdated.addListener(init);
+        await promise;
+        chrome.tabs.onUpdated.removeListener(init);
+        await chrome.tabs.update({ url });
+      }
+      chrome.debugger.attach(target, "1.3");
+      chrome.debugger.sendCommand(target, "Target.setAutoAttach", {
+        autoAttach: !0,
+        waitForDebuggerOnStart: !1
+      });
+      chrome.debugger.sendCommand(target, "Emulation.setCPUThrottlingRate", {
+        rate: +rate
+      });
+      dbgTabId = tabId;
+      chrome.tabs.onActivated.addListener(tabActivatedHandler);
+      chrome.action.setBadgeText({ text: badgeText = "x" + rate });
+    }
   });
 }
 chrome.action.setBadgeTextColor({ color: "#fff" });
