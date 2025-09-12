@@ -1,11 +1,11 @@
 {
   let dbgTabId = 0;
   let badgeText = "";
-  let tabActivatedHandler = activeInfo => chrome.action.setBadgeText({
+  let onTabActivated = activeInfo => chrome.action.setBadgeText({
     text: activeInfo.tabId == dbgTabId ? badgeText : ""
   });
   chrome.debugger.onDetach.addListener(() => (
-    chrome.tabs.onActivated.removeListener(tabActivatedHandler),
+    chrome.tabs.onActivated.removeListener(onTabActivated),
     chrome.action.setBadgeText({ text: "" }),
     dbgTabId = 0
   ));
