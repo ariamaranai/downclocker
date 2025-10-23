@@ -1,9 +1,7 @@
 {
   let dbgTabId = 0;
   let badgeText = "";
-  let onTabActivated = activeInfo => chrome.action.setBadgeText({
-    text: activeInfo.tabId == dbgTabId ? badgeText : ""
-  });
+  let onTabActivated = info => chrome.action.setBadgeText({ text: info.tabId == dbgTabId ? badgeText : "" });
   chrome.debugger.onDetach.addListener(() => (
     chrome.tabs.onActivated.removeListener(onTabActivated),
     chrome.action.setBadgeText({ text: "" }),
@@ -31,7 +29,7 @@
           chrome.tabs.onActivated.addListener(tabActivatedHandler)
         )
     } else
-      chrome.debugger.onDetach.dispatch()
+      chrome.debugger.onDetach.dispatch();
   });
 }
 chrome.action.setBadgeTextColor({ color: "#fff" });
