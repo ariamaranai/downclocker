@@ -19,15 +19,12 @@
         )
         : (
           chrome.debugger.attach(target, "1.3"),
-          chrome.debugger.sendCommand(target, "Target.setAutoAttach", {
-            autoAttach: !0,
-            waitForDebuggerOnStart: !1
-          }),
+          chrome.debugger.sendCommand(target, "Target.setAutoAttach", { autoAttach: !0, waitForDebuggerOnStart: !1 }),
           chrome.debugger.sendCommand(target, "Emulation.setCPUThrottlingRate", { rate }),
           chrome.action.setBadgeText({ text: badgeText = "x" + rate }),
           dbgTabId = tabId,
           chrome.tabs.onActivated.addListener(tabActivatedHandler)
-        )
+        );
     } else
       chrome.debugger.onDetach.dispatch();
   });
